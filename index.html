@@ -13,6 +13,7 @@
       align-items: center;
       justify-content: center;
       margin: 0;
+      position: relative;
     }
     .card {
       box-sizing: border-box;
@@ -21,16 +22,19 @@
       padding: 30px;
       max-width: 420px;
       width: 90%;
-      width: 100%;
       box-shadow: 0 20px 40px rgba(0,0,0,0.15);
       text-align: center;
       opacity: 1;
       transition: opacity 0.6s ease;
+      position: relative;
     }
     .hidden {
       opacity: 0;
       pointer-events: none;
       position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
     }
     h1 {
       color: #d4006b;
@@ -53,12 +57,6 @@
     .option:hover {
       background: #ff99e6;
     }
-    .result {
-      display: none;
-      margin-top: 20px;
-      font-size: 18px;
-      color: #d4006b;
-    }
     .heart {
       font-size: 40px;
       margin-top: 10px;
@@ -69,22 +67,60 @@
       margin-top: 15px;
       color: #ff0066;
     }
+    #letter {
+      font-size: 40px;
+      cursor: pointer;
+      margin-top: 20px;
+    }
+    #letterMsg {
+      font-size: 16px;
+      color: #555;
+      margin-top: 10px;
+    }
     #yay {
       position: fixed;
-      top: 0;
-      left: 0;
-      width: 100vw;
-      height: 100vh;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%) scale(0);
       display: flex;
       align-items: center;
       justify-content: center;
       font-size: 60px;
       color: #ff0066;
       background: rgba(255, 255, 255, 0.8);
+      border-radius: 20px;
+      padding: 20px;
+      opacity: 0;
+      pointer-events: none;
+      transition: all 0.5s ease;
+      z-index: 999;
+    }
+    .modal {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: rgba(0,0,0,0.7);
+      display: flex;
+      justify-content: center;
+      align-items: center;
       opacity: 0;
       pointer-events: none;
       transition: opacity 0.3s ease;
-      z-index: 999;
+      z-index: 1000;
+    }
+    .modal-content {
+      background: white;
+      border-radius: 20px;
+      padding: 20px;
+      max-width: 400px;
+      text-align: left;
+      white-space: pre-wrap;
+    }
+    .modal.show {
+      opacity: 1;
+      pointer-events: all;
     }
     @keyframes pulse {
       0% { transform: scale(1); }
@@ -118,10 +154,16 @@
     <h1 id="finalTitle"></h1>
     <div class="heart" id="heart">❤️</div>
     <div class="rose" id="rose">🌹 Here is an e-rose from me 💌</div>
+    <div id="letter">📩</div>
+    <div id="letterMsg">Click the letter to read my message!</div>
     <h2>I love you so much 😘</h2>
   </div>
 
   <div id="yay">YAY! 🎉</div>
+
+  <div id="modal" class="modal">
+    <div class="modal-content" id="modalContent"></div>
+  </div>
 
   <script>
     document.addEventListener('DOMContentLoaded', () => {
@@ -132,23 +174,27 @@
       const finalTitle = document.getElementById('finalTitle');
       const yay = document.getElementById('yay');
       const noButton = document.getElementById('noButton');
+      const letter = document.getElementById('letter');
+      const modal = document.getElementById('modal');
+      const modalContent = document.getElementById('modalContent');
 
       window.startValentine = function() {
         intro.classList.add('hidden');
-        setTimeout(() => {
+        intro.addEventListener('transitionend', () => {
           intro.style.display = 'none';
           main.classList.remove('hidden');
-        }, 600);
+        }, { once: true });
       };
 
       window.showOptions = function() {
         main.classList.add('hidden');
-        setTimeout(() => {
+        main.addEventListener('transitionend', () => {
           main.style.display = 'none';
           optionsPage.classList.remove('hidden');
-        }, 400);
+        }, { once: true });
+        yay.style.transform = 'translate(-50%, -50%) scale(1)';
         yay.style.opacity = '1';
-        setTimeout(() => { yay.style.opacity = '0'; }, 1000);
+        setTimeout(() => { yay.style.transform = 'translate(-50%, -50%) scale(0)'; yay.style.opacity = '0'; }, 1000);
       };
 
       noButton.addEventListener('click', (e) => {
@@ -159,12 +205,21 @@
 
       window.finalPage = function(activity) {
         optionsPage.classList.add('hidden');
-        setTimeout(() => {
+        optionsPage.addEventListener('transitionend', () => {
           optionsPage.style.display = 'none';
           finalPageDiv.classList.remove('hidden');
           finalTitle.innerHTML = `It's a ${activity} date, Ena! 💕`;
-        }, 400);
+        }, { once: true });
       };
+
+      letter.addEventListener('click', () => {
+        modalContent.textContent = `💌 Dear Ena,\n\nI love you so much, you don’t even understand. Each day I wake up and you’re the first thought that crosses my mind, and that thought lasts the whole day. I hope you feel it.\n\nWhen we don’t communicate in some way, I always feel like I’m going to die of boredom, because when we talk or call, I love it. It’s one of my favourite things to do.\n\nAlways remember that you are the most beautiful soul I know, and I want to keep knowing you until my deathbed… which I hope we share.\n\nI love you so much.\n\nYours sincerely,\nJor Jor 💖`;
+        modal.classList.add('show');
+      });
+
+      modal.addEventListener('click', () => {
+        modal.classList.remove('show');
+      });
     });
   </script>
 </body>
