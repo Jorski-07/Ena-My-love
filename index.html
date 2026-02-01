@@ -1,68 +1,187 @@
-<script>
-document.addEventListener('DOMContentLoaded', () => {
-  const intro = document.getElementById('intro');
-  const main = document.getElementById('main');
-  const datePicker = document.getElementById('datePicker');
-  const options = document.getElementById('options');
-  const result = document.getElementById('result');
-  const heart = document.getElementById('heart');
-  const noButton = document.getElementById('noButton');
-
-  // Intro → main page
-  window.startValentine = function () {
-    intro.style.display = 'none';
-    main.style.display = 'block';
-  };
-
-  // YES → show date picker
-  window.sayYes = function () {
-    datePicker.style.display = 'block';
-    launchConfetti();
-  };
-
-  // Date picked → show activity options
-  datePicker.addEventListener('change', () => {
-    options.style.display = 'block';
-  });
-
-  // NO button dodges
-  noButton.addEventListener('mouseenter', () => {
-    const x = Math.random() * 200 - 100;
-    const y = Math.random() * 120 - 60;
-    noButton.style.transform = `translate(${x}px, ${y}px)`;
-  });
-
-  noButton.addEventListener('click', (e) => {
-    e.preventDefault();
-    noButton.textContent = 'Nice try 😌';
-  });
-
-  // Final choice
-  window.choose = function (activity) {
-    const date = datePicker.value;
-    result.innerHTML = `
-      It's a date, Ena! 💕<br>
-      <strong>${activity}</strong><br>
-      on <strong>${date}</strong><br><br>
-      <em>Screenshot this and send it to Erkan 💌</em>
-    `;
-    result.style.display = 'block';
-    heart.style.display = 'block';
-    options.style.display = 'none';
-  };
-
-  function launchConfetti() {
-    for (let i = 0; i < 30; i++) {
-      const confetti = document.createElement('div');
-      confetti.innerText = '🎉';
-      confetti.style.position = 'fixed';
-      confetti.style.left = Math.random() * 100 + 'vw';
-      confetti.style.top = '-20px';
-      confetti.style.fontSize = Math.random() * 20 + 16 + 'px';
-      confetti.style.animation = 'fall 2s linear forwards';
-      document.body.appendChild(confetti);
-      setTimeout(() => confetti.remove(), 2000);
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Will You Be My Valentine? 💖</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: linear-gradient(135deg, #ff9a9e, #fad0c4);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0;
     }
-  }
-});
-</script>
+    .card {
+      box-sizing: border-box;
+      background: white;
+      border-radius: 20px;
+      padding: 30px;
+      max-width: 420px;
+      width: 90%;
+      width: 100%;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+      text-align: center;
+      opacity: 1;
+      transition: opacity 0.6s ease;
+    }
+    .hidden {
+      opacity: 0;
+      pointer-events: none;
+      position: absolute;
+    }
+    h1 {
+      color: #ff4b6e;
+      margin-bottom: 10px;
+    }
+    p {
+      color: #555;
+    }
+    input[type="date"] {
+      padding: 10px;
+      border-radius: 10px;
+      border: 1px solid #ddd;
+      font-size: 16px;
+      margin: 15px 0;
+      width: 100%;
+    }
+    .options {
+      display: none;
+      margin-top: 20px;
+    }
+    .option {
+      background: #ffe4ec;
+      border: none;
+      border-radius: 12px;
+      padding: 12px;
+      margin: 8px 0;
+      width: 100%;
+      font-size: 16px;
+      cursor: pointer;
+      transition: transform 0.1s ease, background 0.2s ease;
+    }
+    .option:hover {
+      background: #ffc1d1;
+    }
+    .result {
+      display: none;
+      margin-top: 20px;
+      font-size: 18px;
+      color: #ff4b6e;
+    }
+    .heart {
+      font-size: 40px;
+      margin-top: 10px;
+      animation: pulse 1.2s infinite;
+    }
+    @keyframes pulse {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.2); }
+      100% { transform: scale(1); }
+    }
+    @keyframes fall {
+      to {
+        transform: translateY(110vh) rotate(360deg);
+        opacity: 0;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div id="intro" class="card">
+    <h1>Hey Ena 💌</h1>
+    <p>I made something just for you.<br>Prepare yourself...</p>
+    <button class="option" onclick="startValentine()">Tap to continue ✨</button>
+  </div>
+
+  <div class="card hidden" id="main">
+    <h1>Will you be my Valentine? 💘</h1>
+    <p>Pick a day for our date ✨</p>
+
+    <button class="option" onclick="sayYes()">Yes 💖</button>
+    <button class="option" id="noButton">No 🙄</button>
+
+    <input type="date" id="datePicker" style="display:none;" />
+
+    <div class="options" id="options">
+      <p>What should we do?</p>
+      <button class="option" onclick="choose('Movie night 🍿🎬')">Movie night 🍿🎬</button>
+      <button class="option" onclick="choose('Facetime FOREVER 💻')">Facetime FOREVER 💻💻</button>
+      <button class="option" onclick="choose('Bobux with me 🎮😄')">Bobux with me 🎮😄</button>
+      <button class="option" onclick="choose('Dinner DATE (Somehow) 😋 ')">Dinner date (Somehow) 😋 </button>
+    </div>
+
+    <div class="result" id="result"></div>
+    <div class="heart" id="heart" style="display:none;">❤️</div>
+  </div>
+
+  <script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const intro = document.getElementById('intro');
+    const main = document.getElementById('main');
+    const datePicker = document.getElementById('datePicker');
+    const options = document.getElementById('options');
+    const result = document.getElementById('result');
+    const heart = document.getElementById('heart');
+    const noButton = document.getElementById('noButton');
+
+    window.startValentine = function () {
+      intro.classList.add('hidden');
+      setTimeout(() => {
+        intro.style.display = 'none';
+        main.classList.remove('hidden');
+      }, 600);
+    };
+
+    window.sayYes = function () {
+      datePicker.style.display = 'block';
+      launchConfetti();
+    };
+
+    datePicker.addEventListener('change', () => {
+      options.style.display = 'block';
+    });
+
+    noButton.addEventListener('mouseenter', () => {
+      const x = Math.random() * 200 - 100;
+      const y = Math.random() * 120 - 60;
+      noButton.style.transform = `translate(${x}px, ${y}px)`;
+    });
+
+    noButton.addEventListener('click', (e) => {
+      e.preventDefault();
+      noButton.textContent = 'Nice try 😌';
+    });
+
+    window.choose = function (activity) {
+      const date = datePicker.value;
+      result.innerHTML = `
+        It's a date, Ena! 💕<br>
+        <strong>${activity}</strong><br>
+        on <strong>${date}</strong><br><br>
+        <em>Screenshot this and send it to Erkan 💌</em>
+      `;
+      result.style.display = 'block';
+      heart.style.display = 'block';
+      options.style.display = 'none';
+    };
+
+    function launchConfetti() {
+      for (let i = 0; i < 30; i++) {
+        const confetti = document.createElement('div');
+        confetti.innerText = '🎉';
+        confetti.style.position = 'fixed';
+        confetti.style.left = Math.random() * 100 + 'vw';
+        confetti.style.top = '-20px';
+        confetti.style.fontSize = Math.random() * 20 + 16 + 'px';
+        confetti.style.animation = 'fall 2s linear forwards';
+        document.body.appendChild(confetti);
+        setTimeout(() => confetti.remove(), 2000);
+      }
+    }
+  });
+  </script>
+</body>
+</html>
