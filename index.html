@@ -99,53 +99,56 @@
     <div class="heart" id="heart" style="display:none;">❤️</div>
   </div>
 
-  <script>
-    const datePicker = document.getElementById('datePicker');
-    const options = document.getElementById('options');
-    const result = document.getElementById('result');
-    const heart = document.getElementById('heart');
-    const obviouslyYes = document.getElementById('obviouslyYes');
+<script>
+  const datePicker = document.getElementById('datePicker');
+  const options = document.getElementById('options');
+  const result = document.getElementById('result');
+  const heart = document.getElementById('heart');
+  const obviouslyYes = document.getElementById('obviouslyYes');
 
-    function sayYes() {
-      datePicker.style.display = 'block';
-      launchConfetti();
+  function sayYes() {
+    datePicker.style.display = 'block';
+    launchConfetti();
+  }
+
+  datePicker.addEventListener('change', () => {
+    options.style.display = 'block';
+  });
+
+  obviouslyYes.addEventListener('mouseenter', () => {
+    const x = Math.random() * 200 - 100;
+    const y = Math.random() * 120 - 60;
+    obviouslyYes.style.transform = `translate(${x}px, ${y}px)`;
+  });
+
+  function choose(activity) {
+    const date = datePicker.value;
+    result.innerHTML = `
+      It's a date, Ena! 💕<br>
+      <strong>${activity}</strong><br>
+      on <strong>${date}</strong><br><br>
+      <em>Screenshot this and send it to Erkan 💌</em>
+    `;
+    result.style.display = 'block';
+    heart.style.display = 'block';
+    options.style.display = 'none';
+  }
+
+  function launchConfetti() {
+    for (let i = 0; i < 30; i++) {
+      const confetti = document.createElement('div');
+      confetti.innerText = '🎉';
+      confetti.style.position = 'fixed';
+      confetti.style.left = Math.random() * 100 + 'vw';
+      confetti.style.top = '-20px';
+      confetti.style.fontSize = Math.random() * 20 + 16 + 'px';
+      confetti.style.animation = 'fall 2s linear forwards';
+      document.body.appendChild(confetti);
+      setTimeout(() => confetti.remove(), 2000);
     }
+  }
+</script>
 
-    datePicker.addEventListener('change', () => {
-      options.style.display = 'block';
-    });
-
-    obviouslyYes.addEventListener('mouseenter', () => {
-      const x = Math.random() * 200 - 100;
-      const y = Math.random() * 120 - 60;
-      obviouslyYes.style.transform = `translate(${x}px, ${y}px)`;
-    });
-
-    function choose(activity) {
-      const date = datePicker.value;
-      result.innerHTML = `It's a date, Ena! 💕<br><strong>${activity}</strong><br>on <strong>${date}</strong><br><br><em>Screenshot this and send it to Erkan 💌</em>`;
-      result.style.display = 'block';
-      heart.style.display = 'block';
-      options.style.display = 'none';
-    }</strong><br>on <strong>${date}</strong>`;
-      result.style.display = 'block';
-      heart.style.display = 'block';
-      options.style.display = 'none';
-    }
-      function launchConfetti() {
-      for (let i = 0; i < 30; i++) {
-        const confetti = document.createElement('div');
-        confetti.innerText = '🎉';
-        confetti.style.position = 'fixed';
-        confetti.style.left = Math.random() * 100 + 'vw';
-        confetti.style.top = '-20px';
-        confetti.style.fontSize = Math.random() * 20 + 16 + 'px';
-        confetti.style.animation = 'fall 2s linear forwards';
-        document.body.appendChild(confetti);
-        setTimeout(() => confetti.remove(), 2000);
-      }
-    }
-  </script>
   <style>
     @keyframes fall {
       to {
