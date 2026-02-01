@@ -5,6 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Will You Be My Valentine? 💖</title>
   <style>
+    @import url('https://fonts.googleapis.com/css2?family=Great+Vibes&family=Segoe+UI:wght@400;600&display=swap');
+
     body {
       font-family: 'Segoe UI', sans-serif;
       background: linear-gradient(135deg, #ff9a9e, #ff77ff);
@@ -14,7 +16,9 @@
       justify-content: center;
       margin: 0;
       position: relative;
+      overflow-x: hidden;
     }
+
     .card {
       box-sizing: border-box;
       background: white;
@@ -22,12 +26,13 @@
       padding: 30px;
       max-width: 420px;
       width: 90%;
-      box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+      box-shadow: 0 20px 40px rgba(0,0,0,0.2);
       text-align: center;
       opacity: 1;
-      transition: opacity 0.6s ease;
+      transition: opacity 0.6s ease, transform 0.6s ease;
       position: relative;
     }
+
     .hidden {
       opacity: 0;
       pointer-events: none;
@@ -35,48 +40,62 @@
       top: 0;
       left: 0;
       width: 100%;
+      transform: scale(0.95);
     }
+
     h1 {
       color: #d4006b;
       margin-bottom: 10px;
+      font-family: 'Great Vibes', cursive;
     }
+
     p {
       color: #555;
     }
+
     .option {
       background: #ffe4ec;
       border: none;
       border-radius: 12px;
-      padding: 12px;
-      margin: 8px 0;
+      padding: 15px;
+      margin: 10px 0;
       width: 100%;
-      font-size: 16px;
+      font-size: 18px;
       cursor: pointer;
-      transition: transform 0.1s ease, background 0.2s ease;
+      transition: transform 0.2s ease, background 0.3s ease;
     }
+
     .option:hover {
       background: #ff99e6;
+      transform: scale(1.05);
     }
+
     .heart {
       font-size: 40px;
       margin-top: 10px;
       animation: pulse 1.2s infinite;
+      cursor: pointer;
     }
+
     .rose {
       font-size: 30px;
       margin-top: 15px;
       color: #ff0066;
+      cursor: pointer;
     }
+
     #letter {
       font-size: 40px;
       cursor: pointer;
       margin-top: 20px;
     }
+
     #letterMsg {
       font-size: 16px;
       color: #555;
       margin-top: 10px;
     }
+
     #yay {
       position: fixed;
       top: 50%;
@@ -87,7 +106,7 @@
       justify-content: center;
       font-size: 60px;
       color: #ff0066;
-      background: rgba(255, 255, 255, 0.8);
+      background: rgba(255, 255, 255, 0.9);
       border-radius: 20px;
       padding: 20px;
       opacity: 0;
@@ -95,6 +114,7 @@
       transition: all 0.5s ease;
       z-index: 999;
     }
+
     .modal {
       position: fixed;
       top: 0;
@@ -110,18 +130,23 @@
       transition: opacity 0.3s ease;
       z-index: 1000;
     }
+
     .modal-content {
       background: white;
       border-radius: 20px;
       padding: 20px;
       max-width: 400px;
+      max-height: 70vh;
+      overflow-y: auto;
       text-align: left;
       white-space: pre-wrap;
     }
+
     .modal.show {
       opacity: 1;
       pointer-events: all;
     }
+
     @keyframes pulse {
       0% { transform: scale(1); }
       50% { transform: scale(1.2); }
@@ -130,6 +155,7 @@
   </style>
 </head>
 <body>
+
   <div id="intro" class="card">
     <h1>Hey Ena 💌</h1>
     <p>I made something just for you.<br>Prepare yourself...</p>
@@ -156,7 +182,7 @@
     <div class="rose" id="rose">🌹 Here is an e-rose from me 💌</div>
     <div id="letter">📩</div>
     <div id="letterMsg">Click the letter to read my message!</div>
-    <h2>I love you so much 😘</h2>
+    <p><em>Screenshot this and send it to Erkan 💌</em></p>
   </div>
 
   <div id="yay">YAY! 🎉</div>
@@ -178,23 +204,27 @@
       const modal = document.getElementById('modal');
       const modalContent = document.getElementById('modalContent');
 
-      window.startValentine = function() {
-        intro.classList.add('hidden');
-        intro.addEventListener('transitionend', () => {
-          intro.style.display = 'none';
-          main.classList.remove('hidden');
+      function fadeTransition(current, next) {
+        current.classList.add('hidden');
+        current.addEventListener('transitionend', () => {
+          current.style.display = 'none';
+          next.style.display = 'block';
+          setTimeout(() => next.classList.remove('hidden'), 50);
         }, { once: true });
+      }
+
+      window.startValentine = function() {
+        fadeTransition(intro, main);
       };
 
       window.showOptions = function() {
-        main.classList.add('hidden');
-        main.addEventListener('transitionend', () => {
-          main.style.display = 'none';
-          optionsPage.classList.remove('hidden');
-        }, { once: true });
-        yay.style.transform = 'translate(-50%, -50%) scale(1)';
+        fadeTransition(main, optionsPage);
+        yay.style.transform = 'translate(-50%, -50%) scale(1.2)';
         yay.style.opacity = '1';
-        setTimeout(() => { yay.style.transform = 'translate(-50%, -50%) scale(0)'; yay.style.opacity = '0'; }, 1000);
+        setTimeout(() => {
+          yay.style.transform = 'translate(-50%, -50%) scale(0)';
+          yay.style.opacity = '0';
+        }, 1000);
       };
 
       noButton.addEventListener('click', (e) => {
@@ -204,22 +234,49 @@
       });
 
       window.finalPage = function(activity) {
-        optionsPage.classList.add('hidden');
-        optionsPage.addEventListener('transitionend', () => {
-          optionsPage.style.display = 'none';
-          finalPageDiv.classList.remove('hidden');
-          finalTitle.innerHTML = `It's a ${activity} date, Ena! 💕`;
-        }, { once: true });
+        fadeTransition(optionsPage, finalPageDiv);
+        finalTitle.innerHTML = `It's a ${activity} date, Ena! 💕`;
+        const icon = document.createElement('div');
+        icon.textContent = activity.match(/🍿|💻|🎮|😋/g).join('');
+        icon.style.fontSize = '40px';
+        icon.style.position = 'absolute';
+        icon.style.top = '10px';
+        icon.style.left = '50%';
+        icon.style.transform = 'translateX(-50%)';
+        finalPageDiv.appendChild(icon);
+        setTimeout(() => icon.remove(), 1500);
       };
 
+      function typeLetter(message, element) {
+        let i = 0;
+        element.textContent = '';
+        const interval = setInterval(() => {
+          element.textContent += message.charAt(i);
+          i++;
+          if(i >= message.length) clearInterval(interval);
+        }, 30);
+      }
+
       letter.addEventListener('click', () => {
-        modalContent.textContent = `💌 Dear Ena,\n\nI love you so much, you don’t even understand. Each day I wake up and you’re the first thought that crosses my mind, and that thought lasts the whole day. I hope you feel it.\n\nWhen we don’t communicate in some way, I always feel like I’m going to die of boredom, because when we talk or call, I love it. It’s one of my favourite things to do.\n\nAlways remember that you are the most beautiful soul I know, and I want to keep knowing you until my deathbed… which I hope we share.\n\nI love you so much.\n\nYours sincerely,\nJor Jor 💖`;
         modal.classList.add('show');
+        const message = `💌 Dear Ena,
+
+Ena, I love you so much u dont even understand. Each day I wake up and your the first thought that crosses my mind and that thought lasts the whole day, and I hope that you feel it. When we dont communicate in some way I always think im gonna die of bored, Because when we talk or call i love it and its one of my favtuoritr things to do. Always remember that you are the most beautiful soul i know and want to keeping knowing until my death bed in which i hope we share. I love you so much, yours sinsrly Jor jor`;        
+        typeLetter(message, modalContent);
       });
 
       modal.addEventListener('click', () => {
         modal.classList.remove('show');
       });
+
+      document.getElementById('rose').addEventListener('click', () => {
+        alert('💖 I can’t wait to see you!');
+      });
+
+      document.getElementById('heart').addEventListener('click', () => {
+        alert('💖 I can’t wait to see you!');
+      });
+
     });
   </script>
 </body>
