@@ -77,9 +77,15 @@
   </style>
 </head>
 <body>
-  <div class="card">
+  <div id="intro" class="card">
+    <h1>Hey Ena 💌</h1>
+    <p>I made something just for you.<br>Prepare yourself...</p>
+    <button class="option" onclick="startValentine()">Tap to continue ✨</button>
+  </div>
+
+  <div class="card" id="main" style="display:none;">
     <h1>Will you be my Valentine? 💘</h1>
-    <p>Pick a day for our long‑distance date ✨</p>
+    <p>Pick a day for our date ✨</p>
 
     <button class="option" onclick="sayYes()">Yes 💖</button>
     <button class="option" id="noButton">No 🙄</button>
@@ -98,63 +104,67 @@
     <div class="heart" id="heart" style="display:none;">❤️</div>
   </div>
 
- <script>
-document.addEventListener('DOMContentLoaded', () => {
-  const datePicker = document.getElementById('datePicker');
-  const options = document.getElementById('options');
-  const result = document.getElementById('result');
-  const heart = document.getElementById('heart');
-  const noButton = document.getElementById('noButton');
+  <script>
+  document.addEventListener('DOMContentLoaded', () => {
+  const intro = document.getElementById('intro');
+  const main = document.getElementById('main');
+    const datePicker = document.getElementById('datePicker');
+    const options = document.getElementById('options');
+    const result = document.getElementById('result');
+    const heart = document.getElementById('heart');
+    const noButton = document.getElementById('noButton');
+
+    function startValentine() {
+    intro.style.display = 'none';
+    main.style.display = 'block';
+  }
 
   function sayYes() {
-    datePicker.style.display = 'block';
-    launchConfetti();
-  }
-
-  datePicker.addEventListener('change', () => {
-    options.style.display = 'block';
-  });
-
-  noButton.addEventListener('mouseenter', () => {
-    const x = Math.random() * 200 - 100;
-    const y = Math.random() * 120 - 60;
-    noButton.style.transform = `translate(${x}px, ${y}px)`;
-  });
-
-  noButton.addEventListener('click', (e) => {
-    e.preventDefault();
-    noButton.textContent = 'Nice try 😌';
-  });
-
-  function choose(activity) {
-    const date = datePicker.value;
-    result.innerHTML = `
-      It's a date, Ena! 💕<br>
-      <strong>${activity}</strong><br>
-      on <strong>${date}</strong><br><br>
-      <em>Screenshot this and send it to Erkan 💌</em>
-    `;
-    result.style.display = 'block';
-    heart.style.display = 'block';
-    options.style.display = 'none';
-  }
-
-  function launchConfetti() {
-    for (let i = 0; i < 30; i++) {
-      const confetti = document.createElement('div');
-      confetti.textContent = '🎉';
-      confetti.style.position = 'fixed';
-      confetti.style.left = Math.random() * 100 + 'vw';
-      confetti.style.top = '-20px';
-      confetti.style.fontSize = '24px';
-      confetti.style.animation = 'fall 2s linear forwards';
-      document.body.appendChild(confetti);
-      setTimeout(() => confetti.remove(), 2000);
+      datePicker.style.display = 'block';
+      launchConfetti();
     }
-  }
-});
-</script>
 
+    datePicker.addEventListener('change', () => {
+      options.style.display = 'block';
+    });
+
+    noButton.addEventListener('mouseenter', () => {
+      const x = Math.random() * 200 - 100;
+      const y = Math.random() * 120 - 60;
+      noButton.style.transform = `translate(${x}px, ${y}px)`;
+    });
+
+    noButton.addEventListener('click', (e) => {
+      e.preventDefault();
+      noButton.textContent = "Nice try 😌";
+    });
+
+    function choose(activity) {
+      const date = datePicker.value;
+      result.innerHTML = `It's a date, Ena! 💕<br><strong>${activity}</strong><br>on <strong>${date}</strong><br><br><em>Screenshot this and send it to Erkan 💌</em>`;
+      result.style.display = 'block';
+      heart.style.display = 'block';
+      options.style.display = 'none';
+    }</strong><br>on <strong>${date}</strong>`;
+      result.style.display = 'block';
+      heart.style.display = 'block';
+      options.style.display = 'none';
+    }
+      function launchConfetti() {
+      for (let i = 0; i < 30; i++) {
+        const confetti = document.createElement('div');
+        confetti.innerText = '🎉';
+        confetti.style.position = 'fixed';
+        confetti.style.left = Math.random() * 100 + 'vw';
+        confetti.style.top = '-20px';
+        confetti.style.fontSize = Math.random() * 20 + 16 + 'px';
+        confetti.style.animation = 'fall 2s linear forwards';
+        document.body.appendChild(confetti);
+        setTimeout(() => confetti.remove(), 2000);
+      }
+    }
+    });
+</script>
   <style>
     @keyframes fall {
       to {
