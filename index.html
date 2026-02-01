@@ -57,7 +57,6 @@
     }
     .option:hover {
       background: #ffc1d1;
-      transform: scale(1.02);
     }
     .result {
       display: none;
@@ -100,6 +99,7 @@
   </div>
 
   <script>
+  document.addEventListener('DOMContentLoaded', () => {
     const datePicker = document.getElementById('datePicker');
     const options = document.getElementById('options');
     const result = document.getElementById('result');
@@ -150,7 +150,8 @@
         setTimeout(() => confetti.remove(), 2000);
       }
     }
-  </script>
+    });
+</script>
   <style>
     @keyframes fall {
       to {
