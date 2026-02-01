@@ -96,25 +96,6 @@
       margin-top: 10px;
     }
 
-    #yay {
-      position: fixed;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%) scale(0);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 60px;
-      color: #ff0066;
-      background: rgba(255, 255, 255, 0.9);
-      border-radius: 20px;
-      padding: 20px;
-      opacity: 0;
-      pointer-events: none;
-      transition: all 0.5s ease;
-      z-index: 999;
-    }
-
     .modal {
       position: fixed;
       top: 0;
@@ -185,8 +166,6 @@
     <p><em>Screenshot this and send it to Erkan 💌</em></p>
   </div>
 
-  <div id="yay">YAY! 🎉</div>
-
   <div id="modal" class="modal">
     <div class="modal-content" id="modalContent"></div>
   </div>
@@ -198,7 +177,6 @@
       const optionsPage = document.getElementById('optionsPage');
       const finalPageDiv = document.getElementById('finalPage');
       const finalTitle = document.getElementById('finalTitle');
-      const yay = document.getElementById('yay');
       const noButton = document.getElementById('noButton');
       const letter = document.getElementById('letter');
       const modal = document.getElementById('modal');
@@ -219,12 +197,6 @@
 
       window.showOptions = function() {
         fadeTransition(main, optionsPage);
-        yay.style.transform = 'translate(-50%, -50%) scale(1.2)';
-        yay.style.opacity = '1';
-        setTimeout(() => {
-          yay.style.transform = 'translate(-50%, -50%) scale(0)';
-          yay.style.opacity = '0';
-        }, 1000);
       };
 
       noButton.addEventListener('click', (e) => {
@@ -259,9 +231,7 @@
 
       letter.addEventListener('click', () => {
         modal.classList.add('show');
-        const message = `💌 Dear Ena,
-
-Ena, I love you so much u dont even understand. Each day I wake up and your the first thought that crosses my mind and that thought lasts the whole day, and I hope that you feel it. When we dont communicate in some way I always think im gonna die of bored, Because when we talk or call i love it and its one of my favtuoritr things to do. Always remember that you are the most beautiful soul i know and want to keeping knowing until my death bed in which i hope we share. I love you so much, yours sinsrly Jor jor`;        
+        const message = `Dear Ena, I love you so much, you don’t even understand. Each day I wake up and you’re the first thought that crosses my mind, and that thought lasts the whole day. I hope you feel it. When we don’t communicate in some way, I always feel like I’m going to die of boredom because when we talk or call, I love it. It’s one of my favourite things to do. Always remember that you are the most beautiful soul I know, and I want to keep knowing you until my deathbed… which I hope we share. That would be Ich liebe dich so sehr ❤️ Yours sincerely, Jor Jor 💖`;
         typeLetter(message, modalContent);
       });
 
