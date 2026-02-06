@@ -10,21 +10,15 @@
     body {
       font-family: 'Segoe UI', sans-serif;
       background: linear-gradient(135deg, #ff9a9e, #ff77ff);
-      height: 100vh;
+      min-height: 100vh;
       margin: 0;
-      overflow: hidden;
       display: flex;
       align-items: center;
       justify-content: center;
-      position: relative;
+      overflow-x: hidden;
     }
 
     .card {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      box-sizing: border-box;
       background: white;
       border-radius: 20px;
       padding: 30px;
@@ -33,7 +27,11 @@
       text-align: center;
       box-shadow: 0 20px 40px rgba(0,0,0,0.2);
       opacity: 1;
-      transition: opacity 0.6s ease;
+      transition: opacity 0.6s ease, transform 0.6s ease;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
     }
 
     .hidden {
@@ -94,6 +92,12 @@
       margin-top: 10px;
     }
 
+    img.gif {
+      max-width: 100%;
+      border-radius: 15px;
+      margin: 15px 0;
+    }
+
     .modal {
       position: fixed;
       top: 0;
@@ -110,32 +114,25 @@
       z-index: 1000;
     }
 
+    .modal.show {
+      opacity: 1;
+      pointer-events: all;
+    }
+
     .modal-content {
       background: white;
       border-radius: 20px;
       padding: 20px;
       max-width: 400px;
-      max-height: 70vh;
+      max-height: 80vh;
       overflow-y: auto;
-      text-align: left;
       white-space: pre-wrap;
-    }
-
-    .modal.show {
-      opacity: 1;
-      pointer-events: all;
     }
 
     @keyframes pulse {
       0% { transform: scale(1); }
       50% { transform: scale(1.2); }
       100% { transform: scale(1); }
-    }
-
-    img.gif {
-      max-width: 100%;
-      border-radius: 15px;
-      margin: 15px 0;
     }
   </style>
 </head>
@@ -149,8 +146,7 @@
 
   <div class="card hidden" id="main">
     <h1>Will you be my Valentine? 💘</h1>
-    <!-- Correct Valentine GIF -->
-    <img src="https://media.giphy.com/media/enrq327a3sMIJAS5jA/giphy.gif" alt="Cute love gif" class="gif">
+    <img src="https://media.giphy.com/media/enrq327a3sMIJAS5jA/giphy.gif" class="gif" alt="Valentine gif">
     <button class="option" onclick="showOptions()">Yes 💖</button>
     <button class="option" id="noButton">No 🙄</button>
   </div>
@@ -165,8 +161,7 @@
 
   <div class="card hidden" id="finalPage">
     <h1 id="finalTitle"></h1>
-    <!-- E-rose page GIF -->
-    <img src="https://media.giphy.com/media/IzXiddo2twMmdmU8Lv/giphy.gif" alt="E-Rose gif" class="gif">
+    <img src="https://media.giphy.com/media/IzXiddo2twMmdmU8Lv/giphy.gif" class="gif" alt="Rose gif">
     <div class="heart" id="heart">❤️</div>
     <div class="rose" id="rose">🌹 Here is an e-rose from me 💌</div>
     <div id="letter">📩</div>
@@ -174,88 +169,70 @@
     <p><em>Screenshot this and send it to Erkan 💌</em></p>
   </div>
 
-  <div id="modal" class="modal">
+  <div id="modal" class="modal" onclick="closeModal()">
     <div class="modal-content" id="modalContent"></div>
   </div>
 
   <script>
-    document.addEventListener('DOMContentLoaded', () => {
-      const intro = document.getElementById('intro');
-      const main = document.getElementById('main');
-      const optionsPage = document.getElementById('optionsPage');
-      const finalPageDiv = document.getElementById('finalPage');
-      const finalTitle = document.getElementById('finalTitle');
-      const noButton = document.getElementById('noButton');
-      const letter = document.getElementById('letter');
-      const modal = document.getElementById('modal');
-      const modalContent = document.getElementById('modalContent');
+    const intro = document.getElementById('intro');
+    const main = document.getElementById('main');
+    const optionsPage = document.getElementById('optionsPage');
+    const finalPageDiv = document.getElementById('finalPage');
+    const finalTitle = document.getElementById('finalTitle');
+    const noButton = document.getElementById('noButton');
+    const modal = document.getElementById('modal');
+    const modalContent = document.getElementById('modalContent');
 
-      function fadeTransition(current, next) {
-        current.classList.add('hidden');
-        current.addEventListener('transitionend', () => {
-          current.style.display = 'none';
-          next.style.display = 'block';
-          setTimeout(() => next.classList.remove('hidden'), 50);
-        }, { once: true });
-      }
+    function fadeTransition(current, next) {
+      current.classList.add('hidden');
+      setTimeout(() => {
+        current.style.display = 'none';
+        next.style.display = 'block';
+        requestAnimationFrame(() => next.classList.remove('hidden'));
+      }, 600);
+    }
 
-      window.startValentine = function() {
-        fadeTransition(intro, main);
-      };
+    function startValentine() {
+      fadeTransition(intro, main);
+    }
 
-      window.showOptions = function() {
-        fadeTransition(main, optionsPage);
-      };
+    function showOptions() {
+      fadeTransition(main, optionsPage);
+    }
 
-      noButton.addEventListener('click', (e) => {
-        e.preventDefault();
-        noButton.textContent = 'Yes 💖';
-        noButton.onclick = showOptions;
-      });
-
-      window.finalPage = function(activity) {
-        fadeTransition(optionsPage, finalPageDiv);
-        finalTitle.innerHTML = `It's a ${activity} date, Ena! 💕`;
-        const icon = document.createElement('div');
-        icon.textContent = activity.match(/🍿|💻|🎮|😋/g).join('');
-        icon.style.fontSize = '40px';
-        icon.style.position = 'absolute';
-        icon.style.top = '10px';
-        icon.style.left = '50%';
-        icon.style.transform = 'translateX(-50%)';
-        finalPageDiv.appendChild(icon);
-        setTimeout(() => icon.remove(), 1500);
-      };
-
-      function typeLetter(message, element) {
-        let i = 0;
-        element.textContent = '';
-        const interval = setInterval(() => {
-          element.textContent += message.charAt(i);
-          i++;
-          if(i >= message.length) clearInterval(interval);
-        }, 30);
-      }
-
-      letter.addEventListener('click', () => {
-        modal.classList.add('show');
-        const message = `💌 Dear Ena, I love you so much, you don’t even understand. Each day I wake up and you’re the first thought that crosses my mind, and that thought lasts the whole day. I hope you feel it. When we don’t communicate in some way, I always feel like I’m going to die of boredom because when we talk or call, I love it. It’s one of my favourite things to do. Always remember that you are the most beautiful soul I know, and I want to keep knowing you until my deathbed… which I hope we share. That would be Ich liebe dich so sehr ❤️ Yours sincerely, Jor Jor 💖`;
-        typeLetter(message, modalContent);
-      });
-
-      modal.addEventListener('click', () => {
-        modal.classList.remove('show');
-      });
-
-      document.getElementById('rose').addEventListener('click', () => {
-        alert('💖 I can’t wait to see you!');
-      });
-
-      document.getElementById('heart').addEventListener('click', () => {
-        alert('💖 I can’t wait to see you!');
-      });
-
+    noButton.addEventListener('click', () => {
+      noButton.textContent = 'Yes 💖';
+      noButton.onclick = showOptions;
     });
+
+    function finalPage(activity) {
+      fadeTransition(optionsPage, finalPageDiv);
+      finalTitle.textContent = `It's a ${activity} date, Ena! 💕`;
+    }
+
+    let typingInterval;
+    function typeLetter(message) {
+      clearInterval(typingInterval);
+      modalContent.textContent = '';
+      let i = 0;
+      typingInterval = setInterval(() => {
+        modalContent.textContent += message.charAt(i);
+        i++;
+        if (i >= message.length) clearInterval(typingInterval);
+      }, 30);
+    }
+
+    document.getElementById('letter').addEventListener('click', () => {
+      modal.classList.add('show');
+      typeLetter(`💌 Dear Ena, I love you so much, you don’t even understand. Each day I wake up and you’re the first thought that crosses my mind, and that thought lasts the whole day. I hope you feel it. When we don’t communicate in some way, I always feel like I’m going to die of boredom because when we talk or call, I love it. It’s one of my favourite things to do. Always remember that you are the most beautiful soul I know, and I want to keep knowing you until my deathbed… which I hope we share. That would be Ich liebe dich so sehr ❤️\n\nYours sincerely,\nJor Jor 💖`);
+    });
+
+    function closeModal() {
+      modal.classList.remove('show');
+    }
+
+    document.getElementById('rose').onclick = () => alert('💖 I can’t wait to see you!');
+    document.getElementById('heart').onclick = () => alert('💖 I can’t wait to see you!');
   </script>
 </body>
 </html>
